@@ -41,9 +41,16 @@ def masking(image, c, background):
 
     return filtered_masked
 
-
+def save_info(file_name, dataList):
+    #convert this to textfile
+    with open(file_name, 'w',encoding = 'utf-8') as f:
+        for data in dataList:
+            f_name, posX, posY, shape = data
+            f.write(f"{f_name};{posX};{posY};{shape}\n")
 
 def extract_objects(image_fname):
+    #data list
+    data_list = list()
     # reading an image
     image = cv2.imread(image_fname)
     resized = imutils.resize(image, width=300)
@@ -86,19 +93,19 @@ def extract_objects(image_fname):
         # masking
         filtered_masked = masking(image, c, background_mask)
         #output saving
-        #cv2.imshow("Image", filtered_masked)
-        cv2.imwrite(f"DataTemp/Image{i}.png", filtered_masked)
-
-        #cv2.imshow("Image", curr_obj_img )
-        #wait
-        #cv2.waitKey(0)
+        f_name = f"Image{i}.png"
+        cv2.imwrite(f"DataTemp/Objs/{f_name}", filtered_masked)
+        #data encoding
+        instances = (f_name, cX, cY, shape)
+        data_list.append(instances)
+        
 
     # for background
     background_mask_inv = 255-background_mask
     background_masked = cv2.bitwise_and(image, image, mask=background_mask_inv)
-    #cv2.imshow("Image", background_masked)
     cv2.imwrite(f"DataTemp/Background.jpg", background_masked)
-    #cv2.waitKey(0)
+    #saving data
+    save_info(f"DataTemp/DataList.txt", data_list)
 
 #must masked background
 
