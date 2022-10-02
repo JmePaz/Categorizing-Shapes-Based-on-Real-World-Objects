@@ -4,6 +4,7 @@ import imutils
 import cv2
 import numpy as np
 
+
 def crop_object_fromContour(orig, c):
   (x, y, w, h) = cv2.boundingRect(c)
   object_img = orig[y:y+h, x:x+w]
@@ -12,7 +13,7 @@ def crop_object_fromContour(orig, c):
 def removing_backgroundMask(masked):
     # thresholding
     gray_masked = cv2.cvtColor(masked, cv2.COLOR_BGR2GRAY)
-    t_val, alpha_thresh = cv2.threshold(gray_masked, 10, 255, cv2.THRESH_BINARY)
+    t_val, alpha_thresh = cv2.threshold(gray_masked, 1, 255, cv2.THRESH_BINARY)
     # getting b,g,r channel
     b,g,r = cv2.split(masked)
     #merging rbg and also the alpha_thresh
@@ -53,11 +54,12 @@ def extract_objects(image_fname):
     data_list = list()
     # reading an image
     image = cv2.imread(image_fname)
-    resized = imutils.resize(image, width=300)
-    ratio = image.shape[0]/float(resized.shape[0])
+    if(image.shape[1]>=700):
+        image = imutils.resize(image, height=350)
+    #ratio = image.shape[0]/float(resized.shape[0])
 
     #gray scale and blurring
-    gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (1, 1), 1)
     # using canny edge to show the edges
     edged = cv2.Canny(blurred, 50, 255)
@@ -74,27 +76,28 @@ def extract_objects(image_fname):
     # looping on all contours found
     for i,c in enumerate(cnts):
     # if its small then ignore
-        if(cv2.contourArea(c)<100):
+        if(cv2.contourArea(c)<200):
             continue
+
+        # # dependent on c ratio move up to the original
+        # c = c.astype("float")
+        # c *= ratio
+        # c = c.astype("int")
 
         #get moments
         M = cv2.moments(c)
         # finding the center position
-        cX = int((M["m10"]/M["m00"]) * ratio)
-        cY = int((M["m01"]/M["m00"]) * ratio)
+        (x, y, w, h) = cv2.boundingRect(c)
+        cX = x+(w//2)
+        cY = y+(h//2)
         #detecting shape
         shape = sd.detect(c)
-
-        # dependent on c ratio move up to the original
-        c = c.astype("float")
-        c *= ratio
-        c = c.astype("int")
 
         # masking
         filtered_masked = masking(image, c, background_mask)
         #output saving
         f_name = f"Image{i}.png"
-        cv2.imwrite(f"DataTemp/Objs/{f_name}", filtered_masked)
+        cv2.imwrite(f"DataSets/DataTemp/Objs/{f_name}", filtered_masked)
         #data encoding
         instances = (f_name, cX, cY, shape)
         data_list.append(instances)
@@ -103,12 +106,12 @@ def extract_objects(image_fname):
     # for background
     background_mask_inv = 255-background_mask
     background_masked = cv2.bitwise_and(image, image, mask=background_mask_inv)
-    cv2.imwrite(f"DataTemp/Background.jpg", background_masked)
+    cv2.imwrite(f"DataSets/DataTemp/Background.jpg", background_masked)
     #saving data
-    save_info(f"DataTemp/DataList.txt", data_list)
+    save_info(f"DataSets/DataTemp/DataList.txt", data_list)
 
 #must masked background
 
 # calling the method
-extract_objects("ImageTest/referenceImage.png")
+extract_objects("DataSets/ImageTest/referenceImage.png")
 print("Done")
