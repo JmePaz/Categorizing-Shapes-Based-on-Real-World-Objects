@@ -1,1 +1,0 @@
-circle_bin.create_lbl_text("Circle", "black")

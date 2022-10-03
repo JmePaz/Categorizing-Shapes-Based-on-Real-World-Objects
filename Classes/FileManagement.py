@@ -1,4 +1,4 @@
-from ImageObj import ImageObj
+from Classes.ImageObj import ImageObj
 class FileManager:
     def get_info(self, file_name):
         dataList = dict()
