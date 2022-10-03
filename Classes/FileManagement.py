@@ -1,5 +1,11 @@
 from Classes.ImageObj import ImageObj
 class FileManager:
+    def __init__(self):
+        self.file_name = None
+
+    def set_file(self, file_name):
+        self.file_name = file_name
+
     def get_info(self, file_name):
         dataList = dict()
         with open(file_name, 'r') as f:

@@ -29,7 +29,7 @@ def move(canvas,img_obj, shape_bins):
     return move_img
 
 #event handler for dropping
-def release(canvas, img_obj, shape_bins, player_score):
+def release(canvas, img_obj, shape_bins, player_score, main_app):
     def reset_pos(curr_x, curr_y):
         orig_offset_pos = img_obj.offset_pos
         new_x, new_y = (orig_offset_pos[0]-curr_x, orig_offset_pos[1]-curr_y)
@@ -42,9 +42,7 @@ def release(canvas, img_obj, shape_bins, player_score):
         player_score.gain_points()
         # validate if it has full score
         if(player_score.is_full_score()):
-            parent_window = canvas.master
             tkM.showinfo("Congratulations!", "You have solved it!")
-            parent_window.destroy()
 
     def validate_bins(curr_x, curr_y):
         for shape_bin in shape_bins:
@@ -54,14 +52,17 @@ def release(canvas, img_obj, shape_bins, player_score):
             if(is_inside_X and is_inside_Y):
                 # if the answer is right
                 if(img_obj.shape == shape_bin.shape_category):
-                    success_sequence()
+                    is_finished = success_sequence()
                 else:
                     #else if its wrong
                     reset_pos(curr_x, curr_y)
                     break
 
                 #get back through the shape color
-                canvas.itemconfig(shape_bin.instances_bin, fill=shape_bin.color)
+                if(not player_score.is_full_score()):
+                    canvas.itemconfig(shape_bin.instances_bin, fill=shape_bin.color)
+                else:
+                    return "is Finished"
            
     def is_out_canvas(curr_x, curr_y):
         canvas_w = canvas.winfo_width()
@@ -73,11 +74,18 @@ def release(canvas, img_obj, shape_bins, player_score):
 
     def release_img(e):
         curr_x, curr_y = map(int, canvas.coords(img_obj.canvas_img))
-        #loop all through 
-        validate_bins(curr_x, curr_y)
         #check 
         if(is_out_canvas(curr_x, curr_y)):
             reset_pos(curr_x, curr_y)
-        
+        #loop all through shape bins
+        validate_bins(curr_x, curr_y)   
+        # if the game is finished
+        if(player_score.is_full_score()):
+            main_app.frame_game.frame.destroy()
+            main_app.frame_game = None
+            main_app.reload_app()
+            return
 
     return release_img
+
+

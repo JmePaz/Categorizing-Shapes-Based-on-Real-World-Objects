@@ -6,29 +6,33 @@ from Classes.EventHandler import move, release
 from Classes.Player import PlayerScore
 
 
-class Game:
-    def __init__(self, title,w, h):
-        self.w = w
-        self.h = h
-        self.window = tk.Tk()
-        self.window.geometry(f"{w}x{h}")
-        self.window.title(title)
-        self.window.resizable(False, False)
+class GameFrame:
+    def __init__(self, parent_window, main_app):
+        #main_app
+        self.main_app = main_app
+
+        #initalize frame
+        self.frame = tk.Frame(parent_window)
+        self.w = parent_window.winfo_width()
+        self.h = parent_window.winfo_height()
+        self.dataList = None
+        self.bg_img = None
 
         #load the game
         self.__load__game()
-
+        #position
+        self.frame.pack()
     
     def __load__game(self):
         #title
-        tk.Label(self.window, text="Drag and Drop Objects to their respective shapes", font=("Arial", 18)).pack()
-        score_lbl = tk.Label(self.window, text="Points: 0",fg="green", font=("Arial", 15))
+        tk.Label(self.frame, text="Drag and Drop Objects to their respective shapes", font=("Arial", 18)).pack()
+        score_lbl = tk.Label(self.frame, text="Points: 0",fg="green", font=("Arial", 15))
         score_lbl.pack()
 
         #points
 
         # canvas
-        canvas = tk.Canvas(self.window, width=int(self.w*50), height=(self.h*50), bg="gray")
+        canvas = tk.Canvas(self.frame, width=int(self.w*50), height=(self.h*50), bg="gray")
         canvas.pack()
 
         #background
@@ -93,12 +97,8 @@ class Game:
             #drag event
             canvas.tag_bind(img_obj_cnvs ,"<B1-Motion>", move(canvas, img_obj, shape_bins))
             #drop event
-            canvas.tag_bind(img_obj_cnvs, "<ButtonRelease-1>", release(canvas, img_obj, shape_bins, player_score))
+            canvas.tag_bind(img_obj_cnvs, "<ButtonRelease-1>", release(canvas, img_obj, shape_bins, player_score, self.main_app))
 
         
-    def run(self):
-        self.window.mainloop()
-
-#making a game instances and running
-game = Game("Shapes Game", 775, 625)
-game.run()
+    def get_instance_frame(self):
+        return self.frame
