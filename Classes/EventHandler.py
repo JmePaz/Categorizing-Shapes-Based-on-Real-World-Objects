@@ -1,3 +1,5 @@
+import tkinter.messagebox as tkM
+
 def is_in_bound(point_to_check, point_range_A, point_range_B):
         return  point_range_A <= point_to_check and point_to_check <= point_range_B
 
@@ -41,7 +43,8 @@ def release(canvas, img_obj, shape_bins, player_score):
         # validate if it has full score
         if(player_score.is_full_score()):
             parent_window = canvas.master
-            
+            tkM.showinfo("Congratulations!", "You have solved it!")
+            parent_window.destroy()
 
     def validate_bins(curr_x, curr_y):
         for shape_bin in shape_bins:
@@ -55,14 +58,26 @@ def release(canvas, img_obj, shape_bins, player_score):
                 else:
                     #else if its wrong
                     reset_pos(curr_x, curr_y)
+                    break
 
                 #get back through the shape color
                 canvas.itemconfig(shape_bin.instances_bin, fill=shape_bin.color)
-                
+           
+    def is_out_canvas(curr_x, curr_y):
+        canvas_w = canvas.winfo_width()
+        canvas_h = canvas.winfo_height()
+        canvas_x = canvas.winfo_rootx()
+        canvas_y = canvas.winfo_rooty()
+        return not (is_in_bound(curr_x, canvas_x, canvas_x + canvas_w) and is_in_bound(curr_y, canvas_y, canvas_y + canvas_h) )
+
+
     def release_img(e):
         curr_x, curr_y = map(int, canvas.coords(img_obj.canvas_img))
         #loop all through 
         validate_bins(curr_x, curr_y)
+        #check 
+        if(is_out_canvas(curr_x, curr_y)):
+            reset_pos(curr_x, curr_y)
         
 
     return release_img

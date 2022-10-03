@@ -5,6 +5,7 @@ from Classes.ShapeBin import ShapeBin
 from Classes.EventHandler import move, release
 from Classes.Player import PlayerScore
 
+
 class Game:
     def __init__(self, title,w, h):
         self.w = w
@@ -12,6 +13,7 @@ class Game:
         self.window = tk.Tk()
         self.window.geometry(f"{w}x{h}")
         self.window.title(title)
+        self.window.resizable(False, False)
 
         #load the game
         self.__load__game()
