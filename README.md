@@ -1,6 +1,6 @@
 # Categorizing-Shapes-Based-on-Real-World-Objects
 A Game where you categorize objects shapes based on real world objects.
-Special Thanks to my senior <b>Job Lipat</b> for helping me in this project.
+Special thanks to my senior <b>Job Lipat</b> for helping me in this project.
 
 ![image](https://user-images.githubusercontent.com/105730089/193833270-bedfd7fb-81db-4efc-a919-9d699ed1d32a.png)
 
