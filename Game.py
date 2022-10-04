@@ -39,7 +39,7 @@ class GameFrame:
         self.bg_img = ImageTk.PhotoImage(Image.open("DataSets/DataTemp/Background.jpg"))
 
         #setting off set position
-        offsetCenterX= (self.w-self.bg_img.width())//2
+        offsetCenterX= (self.w-450)//2
         offsetCenterY= 10
 
         #setting background to canvas
