@@ -1,4 +1,5 @@
 import tkinter.messagebox as tkM
+from Classes.FileManagement import FileManager
 
 def is_in_bound(point_to_check, point_range_A, point_range_B):
         return  point_range_A <= point_to_check and point_to_check <= point_range_B
@@ -44,6 +45,7 @@ def release(canvas, img_obj, shape_bins, player_score, main_app):
         if(player_score.is_full_score()):
             tkM.showinfo("Congratulations!", "You have solved it!")
 
+
     def validate_bins(curr_x, curr_y):
         for shape_bin in shape_bins:
             is_inside_X = is_in_bound(curr_x, shape_bin.x, shape_bin.x2)
@@ -61,8 +63,7 @@ def release(canvas, img_obj, shape_bins, player_score, main_app):
                 #get back through the shape color
                 if(not player_score.is_full_score()):
                     canvas.itemconfig(shape_bin.instances_bin, fill=shape_bin.color)
-                else:
-                    return "is Finished"
+                
            
     def is_out_canvas(curr_x, curr_y):
         canvas_w = canvas.winfo_width()
@@ -81,6 +82,9 @@ def release(canvas, img_obj, shape_bins, player_score, main_app):
         validate_bins(curr_x, curr_y)   
         # if the game is finished
         if(player_score.is_full_score()):
+            # clear all temp files
+            FileManager.remove_allfiles("DataSets/DataTemp")
+            # back to main app
             main_app.frame_game.frame.destroy()
             main_app.frame_game = None
             main_app.reload_app()
