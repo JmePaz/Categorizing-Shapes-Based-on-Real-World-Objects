@@ -1,4 +1,4 @@
-from DataSets.ShapeDetector import ShapeDetector
+from DataSets.DetectShapes import ShapeDetector
 import argparse
 import imutils
 import cv2
@@ -66,17 +66,17 @@ def extract_objects(image_fname):
     edged = cv2.Canny(blurred, 50, 255)
     edged = cv2.dilate(edged, None, iterations=1)
     edged = cv2.erode(edged, None, iterations=1)
-    # getting the contours
+
+    # getting the contours only storing end points of the edge
     cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
-    # shape detector
-    sd = ShapeDetector()
 
-    
+    # implement a background mask
     background_mask = np.zeros(image.shape[0:2], np.uint8)
 
-    #
+    #for storing all valid contours
     valid_cnts = list()
+
     # looping on all contours found
     for i,c in enumerate(cnts):
         # if its small then ignore
@@ -90,7 +90,7 @@ def extract_objects(image_fname):
         cX = x+(w//2)
         cY = y+(h//2)
         #detecting shape
-        shape = sd.detect(c)
+        shape = ShapeDetector.detect(c, f"Image{i}")
 
         # masking
         filtered_masked = masking(image, c, background_mask)
