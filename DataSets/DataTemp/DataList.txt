@@ -1,0 +1,5 @@
+Image1.png;42;220;circle
+Image2.png;361;229;square
+Image3.png;151;143;circle
+Image4.png;221;197;pentagon
+Image5.png;371;96;triangle
