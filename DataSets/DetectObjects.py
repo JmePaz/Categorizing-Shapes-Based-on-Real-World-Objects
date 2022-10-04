@@ -32,6 +32,7 @@ def masking(image, c, background):
     cv2.drawContours(mask, [c], -1, white_color, cv2.FILLED)
     #for background
     cv2.drawContours(background, [c], -1, white_color, cv2.FILLED)
+
     #masking
     inv_mask = 255-mask
     masked = cv2.bitwise_and(image, image, mask=mask)
@@ -71,21 +72,19 @@ def extract_objects(image_fname):
     # shape detector
     sd = ShapeDetector()
 
-    #
+    
     background_mask = np.zeros(image.shape[0:2], np.uint8)
+
+    #
+    valid_cnts = list()
     # looping on all contours found
     for i,c in enumerate(cnts):
-    # if its small then ignore
+        # if its small then ignore
         if(cv2.contourArea(c)<200):
             continue
+        else:
+            valid_cnts.append(c)
 
-        # # dependent on c ratio move up to the original
-        # c = c.astype("float")
-        # c *= ratio
-        # c = c.astype("int")
-
-        #get moments
-        M = cv2.moments(c)
         # finding the center position
         (x, y, w, h) = cv2.boundingRect(c)
         cX = x+(w//2)
@@ -106,7 +105,8 @@ def extract_objects(image_fname):
     # for background
     background_mask_inv = 255-background_mask
     background_masked = cv2.bitwise_and(image, image, mask=background_mask_inv)
-    cv2.imwrite(f"DataSets/DataTemp/Background.jpg", background_masked)
+    background_masked_drawedcnts = cv2.drawContours(background_masked, valid_cnts, -1, (51, 204, 51), thickness=3)
+    cv2.imwrite(f"DataSets/DataTemp/Background.jpg", background_masked_drawedcnts)
     #saving data
     save_info(f"DataSets/DataTemp/DataList.txt", data_list)
     print("Done Image Processing!")
