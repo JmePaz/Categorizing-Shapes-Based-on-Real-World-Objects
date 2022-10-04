@@ -90,7 +90,7 @@ def extract_objects(image_fname):
         cX = x+(w//2)
         cY = y+(h//2)
         #detecting shape
-        shape = ShapeDetector.detect(c, f"Image{i}")
+        shape = ShapeDetector.detect(c)
 
         # masking
         filtered_masked = masking(image, c, background_mask)

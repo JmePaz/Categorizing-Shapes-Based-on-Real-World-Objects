@@ -8,7 +8,6 @@ class ShapeDetector:
     approx = cv2.approxPolyDP(c, 0.0090*peri, True)
     approx_len = len(approx)
 
-    print(debugName, approx_len)
     if approx_len==3:
       shape = "triangle"
 
