@@ -1,4 +1,4 @@
-from ShapeDetector import ShapeDetector
+from DataSets.ShapeDetector import ShapeDetector
 import argparse
 import imutils
 import cv2
@@ -109,9 +109,5 @@ def extract_objects(image_fname):
     cv2.imwrite(f"DataSets/DataTemp/Background.jpg", background_masked)
     #saving data
     save_info(f"DataSets/DataTemp/DataList.txt", data_list)
+    print("Done Image Processing!")
 
-#must masked background
-
-# calling the method
-extract_objects("DataSets/ImageTest/referenceImage.png")
-print("Done")
