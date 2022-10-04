@@ -21,8 +21,9 @@ class App:
         self.__load_app()
 
     def select_file(self, canvas):
+        valid_file_formats  = [("Valid img formats", ("*.jpg", "*.png"))]
         def get_dir_file():
-            self.dir_file_name = filedialog.askopenfilename()
+            self.dir_file_name = filedialog.askopenfilename(title="Select a image", filetypes=valid_file_formats)
             #set image
             img = Image.open(self.dir_file_name)
             #resizing the image
@@ -72,6 +73,10 @@ class App:
         #frame
         self.frame_app = tk.Frame(self.window)
         self.frame_app.pack()
+        #labels and title
+        tk.Label(self.frame_app, text="Shape Categorization Game based on Images", font=("Arial", 25)).pack(pady=10)
+        tk.Label(self.frame_app, text="Developed by James Paz", font=("Arial", 10)).pack()
+
         #Image
         canvas = tk.Canvas(self.frame_app, width= 400, height= 350, bg="gray")
         canvas.pack(pady=20)
@@ -82,7 +87,9 @@ class App:
 
         # run a game
         start_btn = tk.Button(self.frame_app, text="Start Game", height=3, width=23, bg="green", foreground="white", command=self.start_game)
-        start_btn.pack(pady=47)
+        start_btn.pack(pady=30)
+
+        
 
     def reload_app(self):
         self.img_input = None
