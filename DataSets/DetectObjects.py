@@ -62,8 +62,8 @@ def extract_objects(image_fname):
     #gray scale and blurring
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (1, 1), 1)
-    # using canny edge to show the edges
-    edged = cv2.Canny(blurred, 50, 255)
+    # using canny edge to show the edges [Update Canny edge]
+    edged = cv2.Canny(blurred, 75, 125)
     edged = cv2.dilate(edged, None, iterations=1)
     edged = cv2.erode(edged, None, iterations=1)
 
